@@ -5,17 +5,18 @@
  */
 package com.mycompany.tp.servlets;
 
+import jdbc.selectState;
 import java.io.IOException;
 import java.io.PrintWriter;
-import static java.lang.System.out;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import simplejdbc.CustomerEntity;
-import simplejdbc.DAO;
+import simplejdbc.DAOException;
 import simplejdbc.DataSourceFactory;
 
 /**
@@ -41,31 +42,33 @@ public class StateForm extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet StateForm</title>");            
+            out.println("<title>Servlet StateForm</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet StateForm at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
-             
-        
-        try {   // Trouver la valeur du paramètre HTTP customerID
 
-           
+            try {   // Trouver la valeur du paramètre HTTP customerID
+
                 // on doit convertir cette valeur en entier (attention aux exceptions !)
-              
- 
-                DAO dao = new DAO(DataSourceFactory.getDataSource());
-                //CustomerEntity customer = dao.findCustomer(customerID);
-                out.printf("<select>");
-                        
-                     //<option value="volvo">Volvo</option>
-                     
-                             
-                             
-                   out.print("</select>");
-                
-            } catch (Exception e) {
+                selectState dao = new selectState(DataSourceFactory.getDataSource());
+                List<String> country = dao.states();
+                out.printf("<form action='ShowClientC'>");
+                out.printf("<select name='country'>");
+
+                for (int i = 0; i < country.size(); i++) {
+
+                    out.printf("<option value=" + country.get(i) + ">" + country.get(i) + "</option>");
+
+                }
+
+                out.print("</select>");
+
+                out.printf("<input type=\"submit\" value=\"valider\">");
+                out.printf("</form>");
+
+            } catch (DAOException | SQLException e) {
                 out.printf("Erreur : %s", e.getMessage());
             }
             out.printf("<hr><a href='%s'>Retour au menu</a>", request.getContextPath());
@@ -74,7 +77,7 @@ public class StateForm extends HttpServlet {
         } catch (Exception ex) {
             Logger.getLogger("servlet").log(Level.SEVERE, "Erreur de traitement", ex);
         }
-        
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

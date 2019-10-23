@@ -22,7 +22,7 @@ import simplejdbc.DataSourceFactory;
  *
  * @author pedago
  */
-public class ShowClientC extends HttpServlet {
+public class ShowClientsInState extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -49,7 +49,7 @@ public class ShowClientC extends HttpServlet {
             out.println("</html>");
             
             try {   // Trouver la valeur du paramètre HTTP customerID
-                String val = request.getParameter("country");
+                String val = request.getParameter("state");
                 if (val == null) {
                     throw new Exception("La paramètre customerID n'a pas été transmis");
                 }
